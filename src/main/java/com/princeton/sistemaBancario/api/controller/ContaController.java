@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,7 @@ public class ContaController{
 	ContaRepository contaRepository;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_LST')")
 	public Page<ContaModel>  listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Conta> ContasPage = contaRepository.findAll(pageable);
 		
@@ -63,6 +65,7 @@ public class ContaController{
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_ADD')")
 	public ContaModel adicionar(@RequestBody @Valid  ContaInput contaInput) {
 		contaService.validarContaUnica(contaInput.getBanco().getId(), contaInput.getConta());
 		Conta conta = contaInputConverter.toDomain(contaInput);
@@ -72,6 +75,7 @@ public class ContaController{
 	}
 	
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_UPD')")
 	public ContaModel atualizar(@PathVariable Long id, @RequestBody @Valid ContaInput contaInput) {
 		try {
 			Conta contaAtual = contaService.buscarOuFalhar(id);
@@ -86,6 +90,7 @@ public class ContaController{
 	
 	@DeleteMapping("/{contaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_DEL')")
 	public void remover(@PathVariable Long contaId) {
 		contaService.excluir(contaId);
 	}

@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,12 +33,14 @@ public class TransferenciaController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@PreAuthorize("hasAnyAuthority('ROLE_TRANSF_ADD')")
 	public TransferenciaModel criarTransferencia(@RequestBody @Valid  TransferenciaInput transferenciaInput) {
 		
 		return transferenciaService.criarTransferencia(transferenciaInput);
 	}
 	
 	@GetMapping
+	@PreAuthorize("hasAnyAuthority('ROLE_TRANSF_LST')")
     public Page<TransferenciaModel> listarTransferencias(
             @RequestParam(required = false) Long idContaOrigem,
             @RequestParam(required = false) Long idContaDestino,
