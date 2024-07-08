@@ -22,15 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.princeton.sistemaBancario.api.model.TransferenciaModel;
 import com.princeton.sistemaBancario.api.model.input.TransferenciaInput;
+import com.princeton.sistemaBancario.api.openapi.controller.TransferenciaControllerOpenApi;
 import com.princeton.sistemaBancario.domain.service.TransferenciaService;
 
+import io.swagger.annotations.Api;
+
+@Api(tags = "Transferencias")
 @RestController
 @RequestMapping(value = "/transferencias")
-public class TransferenciaController {
+public class TransferenciaController implements TransferenciaControllerOpenApi {
 	
 	@Autowired
 	TransferenciaService transferenciaService;
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('ROLE_TRANSF_ADD')")
@@ -39,6 +44,7 @@ public class TransferenciaController {
 		return transferenciaService.criarTransferencia(transferenciaInput);
 	}
 	
+	@Override
 	@GetMapping
 	@PreAuthorize("hasAnyAuthority('ROLE_TRANSF_LST')")
     public Page<TransferenciaModel> listarTransferencias(

@@ -27,6 +27,7 @@ import com.princeton.sistemaBancario.api.converter.ContaInputConverter;
 import com.princeton.sistemaBancario.api.converter.ContaModelConverter;
 import com.princeton.sistemaBancario.api.model.ContaModel;
 import com.princeton.sistemaBancario.api.model.input.ContaInput;
+import com.princeton.sistemaBancario.api.openapi.controller.ContaControllerOpenApi;
 import com.princeton.sistemaBancario.domain.exception.BancoNaoEncontradoException;
 import com.princeton.sistemaBancario.domain.exception.NegocioException;
 import com.princeton.sistemaBancario.domain.model.Conta;
@@ -34,8 +35,8 @@ import com.princeton.sistemaBancario.domain.repository.ContaRepository;
 import com.princeton.sistemaBancario.domain.service.ContaService;
 
 @RestController
-@RequestMapping(value = "/contas")
-public class ContaController{
+@RequestMapping(path = "/contas",  produces = MediaType.APPLICATION_JSON_VALUE)
+public class ContaController implements ContaControllerOpenApi{
 	
 	@Autowired
 	ContaInputConverter contaInputConverter;
@@ -49,7 +50,8 @@ public class ContaController{
 	@Autowired
 	ContaRepository contaRepository;
 	
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@Override
+	@GetMapping()
 	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_LST')")
 	public Page<ContaModel>  listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Conta> ContasPage = contaRepository.findAll(pageable);
@@ -63,6 +65,7 @@ public class ContaController{
 		return contaModelPage;
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_ADD')")
@@ -74,6 +77,7 @@ public class ContaController{
 		return contaModelConverter.toModel(conta);
 	}
 	
+	@Override
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_UPD')")
 	public ContaModel atualizar(@PathVariable Long id, @RequestBody @Valid ContaInput contaInput) {
@@ -88,6 +92,7 @@ public class ContaController{
 		}
 	}
 	
+	@Override
 	@DeleteMapping("/{contaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAnyAuthority('ROLE_CONTA_DEL')")

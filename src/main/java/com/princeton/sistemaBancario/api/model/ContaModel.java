@@ -2,8 +2,7 @@ package com.princeton.sistemaBancario.api.model;
 
 import java.math.BigDecimal;
 
-import com.princeton.sistemaBancario.domain.model.Banco;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +10,18 @@ import lombok.Setter;
 @Getter
 public class ContaModel {
 	
+	@ApiModelProperty(example = "1", position = 1)
     private Long id;
+	
+	@ApiModelProperty(position = 2)
+    private BancoModel banco;
 
-    private Banco banco;
-
+    @ApiModelProperty(example = "12886-3", position = 3)
     private String conta;
 
+    @ApiModelProperty(example = "Maria Aparecida", position = 4)
     private String beneficiario;
 
+    @ApiModelProperty(example = "2000", position = 5)
     private BigDecimal saldo;
 }

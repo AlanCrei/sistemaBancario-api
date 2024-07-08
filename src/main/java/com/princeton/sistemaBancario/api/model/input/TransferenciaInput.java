@@ -12,10 +12,11 @@ import lombok.Setter;
 @Getter
 public class TransferenciaInput {
 	
+	
 	@Valid
 	@NotNull
     private ContaInputId contaOrigem;
-
+	
 	@Valid
     @NotNull
     private ContaInputId ContaDestino;
